@@ -19,7 +19,8 @@ struct ListView: View {
     
     var body: some View {
         NavigationView {
-            VStack (spacing:0){
+            VStack(spacing: 0) {
+                
                 switch viewModel.viewModelState {
                     case .loadingView:
                         LoadingView()
@@ -27,24 +28,36 @@ struct ListView: View {
                         Text(error)
                     case .loadedView, .filteredView:
                         header
-                    
+                        
                         HStack {
-                            SearchBarView(searchText: $viewModel.searchText, clearSearch: $viewModel.clearSearchText)
+                            SearchBarView(searchText: $viewModel.searchText,
+                                          clearSearch: $viewModel.clearSearchText)
                             buttonAction
                         }
                         .padding(.horizontal, 10)
                         .background(Color.yellow)
-                    
-                        ScrollView{
-                            listado
+                        
+                        ScrollView {
+                            LazyVStack(spacing: 0) {
+                                listado
+                                
+                                // Indicador de carga al final
+                                if viewModel.isLoading {
+                                    ProgressView()
+                                        .padding()
+                                }
+                            }
                         }
-                    
+                        
                         paginacion
                             .frame(height: 60)
                 }
             }
             .navigationTitle("Characters")
             .environmentObject(characterData)
+            .onAppear {
+                viewModel.getList()
+            }
         }
     }
 }
@@ -56,7 +69,6 @@ extension ListView {
             Text("Rick and Morty")
                 .font(.headline)
                 .fontWeight(.heavy)
-                .animation(.none)
         }
         .padding(.horizontal)
     }
@@ -71,72 +83,63 @@ extension ListView {
         }
     }
     
-    private var loading: some View {
-        ZStack {
-            Color(.gray)
-                .ignoresSafeArea()
-            VStack {
-                Text("Cargando ....")
-                ProgressView()
-                    .progressViewStyle(CircularProgressViewStyle())
-            }
-            .padding()
-            .background(.white)
-            .cornerRadius(10)
-        }
-    }
-    
     private var listado: some View {
-        ForEach(viewModel.characters!.data){ result in
-            VStack(spacing:0) {
+        ForEach(viewModel.characters?.data ?? []) { result in
+            VStack(spacing: 0) {
                 ItemCharacter(item: result)
                     .frame(height: 90)
                     .onTapGesture {
-                        self.characterData.idSelected = result.id
-                        self.showDetailView = true
+                        characterData.idSelected = result.id
+                        showDetailView = true
+                    }
+                    .onAppear {
+                        // Detectar último item para cargar siguiente página
+                        if result.id == viewModel.characters?.data.last?.id {
+                            viewModel.loadNextPage()
+                        }
                     }
             }
-            .sheet(isPresented: $showDetailView, content: {
+            .sheet(isPresented: $showDetailView) {
                 DetailView()
-            })
+            }
         }
     }
     
-    
     private var paginacion: some View {
-        return VStack(alignment: .leading, spacing: 0) {
+        VStack(alignment: .leading, spacing: 0) {
             HStack {
-                Text("Pag. :")
+                Text("Pag.:")
                     .frame(width: 50, height: 50)
                     .font(.subheadline)
                     .background(Color.yellow)
                     .foregroundColor(Color.blue)
                     .cornerRadius(8)
-                ScrollView(.horizontal) {
-                        if let forEachNumberPages: Int? = viewModel.numberPagesForNavigate, forEachNumberPages! > 0 {
-                            HStack {
-                                ForEach(1...forEachNumberPages!, id: \.self) { numberPage in
-                                    Button(action: {
-                                        viewModel.searchText = ""
-                                        viewModel.getListByPage(page: "\(numberPage)")
-                                    }) {
-                                        Text("\(numberPage)")
-                                            .frame(width: 24, height: 20)
-                                            .padding()
-                                            .background(viewModel.numberPage == numberPage ? Color.gray : Color.blue)
-                                            .foregroundColor(.white)
-                                            .cornerRadius(8)
-                                            .shadow(color: Color.blue, radius: 3)
-                                    }
-                                }
+                
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack {
+                        ForEach(1...viewModel.numberPagesForNavigate, id: \.self) { numberPage in
+                            Button(action: {
+                                viewModel.searchText = ""
+                                viewModel.getListByPage(page: "\(numberPage)")
+                            }) {
+                                Text("\(numberPage)")
+                                    .frame(width: 24, height: 20)
+                                    .padding()
+                                    .background(viewModel.numberPage == numberPage ? Color.gray : Color.blue)
+                                    .foregroundColor(.white)
+                                    .cornerRadius(8)
+                                    .shadow(color: Color.blue, radius: 3)
                             }
                         }
                     }
-            }.padding()
-        }.padding()
+                }
+            }
+            .padding()
+        }
+        .padding()
     }
-
 }
+
 
 #Preview {
     ListView()
