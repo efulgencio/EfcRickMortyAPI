@@ -109,10 +109,7 @@ extension DetailView {
     }
     
     private var episodeView: some View {
-        List(viewModel.character.data!.episode, id: \.self) { item in
-            Text(item)
-                .modifier(CustomModifierCardDetailItem())
-        }.listStyle(PlainListStyle())
+        EpisodeView(episodes: viewModel.character.data!.episode)
     }
     
     private var header: some View {

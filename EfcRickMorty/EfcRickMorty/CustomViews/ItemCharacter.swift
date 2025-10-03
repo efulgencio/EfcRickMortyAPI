@@ -20,13 +20,12 @@ struct ItemCharacter: View {
                     Text("\(item.name)")
                         .padding(.horizontal, 20)
                     Spacer()
-                    AsyncImage(url: URL(string: item.image)){ image in
-                        image.resizable()
-                            .cornerRadius(25)
-                    } placeholder: {
-                        imagePlaceHolder
-                    }
+                    CachedAsyncImage(
+                        url: URL(string: item.image),
+                        placeholder: Image(systemName: "person.crop.circle")
+                    )
                     .frame(width: 50, height: 50)
+                    .clipShape(RoundedRectangle(cornerRadius: 25))
                     .padding()
                 }
                 .modifier(CustomModifierCardDetailItem())
