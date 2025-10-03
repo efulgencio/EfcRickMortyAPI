@@ -28,10 +28,9 @@ struct ListView: View {
                         Text(error)
                     case .loadedView, .filteredView:
                         header
-                        
+                        registrosCargados
                         HStack {
-                            SearchBarView(searchText: $viewModel.searchText,
-                                          clearSearch: $viewModel.clearSearchText)
+                            SearchBarView(searchText: $viewModel.searchText, clearSearch: $viewModel.clearSearchText)
                             buttonAction
                         }
                         .padding(.horizontal, 10)
@@ -40,7 +39,6 @@ struct ListView: View {
                         ScrollView {
                             LazyVStack(spacing: 0) {
                                 listado
-                                
                                 // Indicador de carga al final
                                 if viewModel.isLoading {
                                     ProgressView()
@@ -48,10 +46,8 @@ struct ListView: View {
                                 }
                             }
                         }
-                        PaginationView(
-                            currentPage: $viewModel.numberPage,
-                            totalPages: viewModel.numberPagesForNavigate
-                        ) { selectedPage in
+                    
+                        PaginationView(currentPage: $viewModel.numberPage, totalPages: viewModel.numberPagesForNavigate) { selectedPage in
                             viewModel.searchText = ""
                             viewModel.getListByPage(page: "\(selectedPage)")
                         }
@@ -86,6 +82,18 @@ extension ListView {
                 .resizable()
                 .frame(width: 40, height: 40)
         }
+    }
+    
+    /// Número de registros cargados, siempre visible
+    private var registrosCargados: some View {
+        Text("Registros cargados: \(viewModel.characters?.data.count ?? 0)")
+            .font(.subheadline)
+            .fontWeight(.medium)
+            .padding(.horizontal)
+            .padding(.vertical, 5)
+            .background(Color.yellow.opacity(0.3))
+            .cornerRadius(8)
+            .padding(.horizontal)
     }
     
     private var listado: some View {
