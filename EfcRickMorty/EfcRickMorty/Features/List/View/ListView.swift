@@ -48,9 +48,14 @@ struct ListView: View {
                                 }
                             }
                         }
-                        
-                        paginacion
-                            .frame(height: 60)
+                        PaginationView(
+                            currentPage: $viewModel.numberPage,
+                            totalPages: viewModel.numberPagesForNavigate
+                        ) { selectedPage in
+                            viewModel.searchText = ""
+                            viewModel.getListByPage(page: "\(selectedPage)")
+                        }
+                        .frame(height: 60)
                 }
             }
             .navigationTitle("Characters")
@@ -104,59 +109,6 @@ extension ListView {
             }
         }
     }
-    
-    private var paginacion: some View {
-        HStack {
-            // Botón fijo
-            Text("Pag.:")
-                .frame(width: 50, height: 50)
-                .font(.subheadline)
-                .background(Color.yellow)
-                .foregroundColor(Color.blue)
-                .cornerRadius(8)
-            
-            // Scroll solo para los números
-            ScrollViewReader { proxy in
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 8) {
-                        ForEach(1...viewModel.numberPagesForNavigate, id: \.self) { numberPage in
-                            Button(action: {
-                                viewModel.searchText = ""
-                                viewModel.getListByPage(page: "\(numberPage)")
-                                // Scroll al botón pulsado
-                                DispatchQueue.main.async {
-                                    withAnimation {
-                                        proxy.scrollTo(numberPage, anchor: .center)
-                                    }
-                                }
-                            }) {
-                                Text("\(numberPage)")
-                                    .frame(width: 24, height: 20)
-                                    .padding()
-                                    .background(viewModel.numberPage == numberPage ? Color.gray : Color.blue)
-                                    .foregroundColor(.white)
-                                    .cornerRadius(8)
-                                    .shadow(color: Color.blue, radius: 3)
-                            }
-                            .id(numberPage)
-                        }
-                    }
-                    .padding(.vertical, 5)
-                }
-                // Scroll automático cuando cambia la página por scroll infinito
-                .onReceive(viewModel.$numberPage) { newPage in
-                    DispatchQueue.main.async {
-                        withAnimation {
-                            proxy.scrollTo(newPage, anchor: .center)
-                        }
-                    }
-                }
-            }
-        }
-        .padding(.horizontal)
-    }
-
-
 }
 
 
