@@ -106,21 +106,29 @@ extension ListView {
     }
     
     private var paginacion: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            HStack {
-                Text("Pag.:")
-                    .frame(width: 50, height: 50)
-                    .font(.subheadline)
-                    .background(Color.yellow)
-                    .foregroundColor(Color.blue)
-                    .cornerRadius(8)
-                
+        HStack {
+            // Botón fijo
+            Text("Pag.:")
+                .frame(width: 50, height: 50)
+                .font(.subheadline)
+                .background(Color.yellow)
+                .foregroundColor(Color.blue)
+                .cornerRadius(8)
+            
+            // Scroll solo para los números
+            ScrollViewReader { proxy in
                 ScrollView(.horizontal, showsIndicators: false) {
-                    HStack {
+                    HStack(spacing: 8) {
                         ForEach(1...viewModel.numberPagesForNavigate, id: \.self) { numberPage in
                             Button(action: {
                                 viewModel.searchText = ""
                                 viewModel.getListByPage(page: "\(numberPage)")
+                                // Scroll al botón pulsado
+                                DispatchQueue.main.async {
+                                    withAnimation {
+                                        proxy.scrollTo(numberPage, anchor: .center)
+                                    }
+                                }
                             }) {
                                 Text("\(numberPage)")
                                     .frame(width: 24, height: 20)
@@ -130,14 +138,25 @@ extension ListView {
                                     .cornerRadius(8)
                                     .shadow(color: Color.blue, radius: 3)
                             }
+                            .id(numberPage)
+                        }
+                    }
+                    .padding(.vertical, 5)
+                }
+                // Scroll automático cuando cambia la página por scroll infinito
+                .onReceive(viewModel.$numberPage) { newPage in
+                    DispatchQueue.main.async {
+                        withAnimation {
+                            proxy.scrollTo(newPage, anchor: .center)
                         }
                     }
                 }
             }
-            .padding()
         }
-        .padding()
+        .padding(.horizontal)
     }
+
+
 }
 
 
