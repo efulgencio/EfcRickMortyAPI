@@ -38,3 +38,23 @@ struct CustomModifierCardDetailItem: ViewModifier {
         
     }
 }
+
+struct InfoBadgeStyle: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .font(.subheadline.weight(.semibold))
+            .padding(.horizontal, 10)
+            .padding(.vertical, 6)
+            .foregroundStyle(.white)
+            .background(
+                Capsule().fill(Color.accentColor.opacity(0.85))
+            )
+            .accessibilityAddTraits(.isStaticText)
+    }
+}
+
+extension View {
+    func infoBadgeStyle() -> some View {
+        self.modifier(InfoBadgeStyle())
+    }
+}
