@@ -56,6 +56,7 @@ struct ListView: View {
             }
             .navigationTitle("Characters")
             .environmentObject(characterData)
+            .navigationBarTitleDisplayMode(.inline)
             .onAppear {
                 viewModel.getList()
             }
