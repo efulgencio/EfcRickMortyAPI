@@ -84,16 +84,9 @@ extension ListView {
         }
     }
     
-    /// Número de registros cargados, siempre visible
     private var registrosCargados: some View {
         Text("Registros cargados: \(viewModel.characters?.data.count ?? 0)")
-            .font(.subheadline)
-            .fontWeight(.medium)
-            .padding(.horizontal)
-            .padding(.vertical, 5)
-            .background(Color.yellow.opacity(0.3))
-            .cornerRadius(8)
-            .padding(.horizontal)
+            .infoBadgeStyle()
     }
     
     private var listado: some View {
@@ -118,7 +111,6 @@ extension ListView {
         }
     }
 }
-
 
 #Preview {
     ListView()
