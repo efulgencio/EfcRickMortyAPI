@@ -7,6 +7,22 @@
 
 import SwiftUI
 
+struct PageButtonStyle: ButtonStyle {
+    let isSelected: Bool
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .frame(width: 24, height: 20)
+            .padding()
+            .background(isSelected ? Color.gray : Color.blue)
+            .foregroundColor(.white)
+            .cornerRadius(8)
+            .shadow(color: Color.blue, radius: 3)
+            .scaleEffect(configuration.isPressed ? 0.96 : 1.0)
+            .animation(.easeInOut(duration: 0.15), value: configuration.isPressed)
+    }
+}
+
 struct PaginationView: View {
     @Binding var currentPage: Int
     let totalPages: Int
@@ -35,13 +51,8 @@ struct PaginationView: View {
                                 }
                             }) {
                                 Text("\(numberPage)")
-                                    .frame(width: 24, height: 20)
-                                    .padding()
-                                    .background(currentPage == numberPage ? Color.gray : Color.blue)
-                                    .foregroundColor(.white)
-                                    .cornerRadius(8)
-                                    .shadow(color: Color.blue, radius: 3)
                             }
+                            .buttonStyle(PageButtonStyle(isSelected: currentPage == numberPage))
                             .id(numberPage)
                         }
                     }
@@ -60,3 +71,4 @@ struct PaginationView: View {
         .padding(.horizontal)
     }
 }
+
