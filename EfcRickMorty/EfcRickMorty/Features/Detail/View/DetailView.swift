@@ -114,7 +114,7 @@ extension DetailView {
     
     private var header: some View {
         HStack {
-            Text("Rick and Morty (DETAIL)")
+            Text(NSLocalizedString("rick_morty", comment: ""))
                 .font(.headline)
                 .fontWeight(.heavy)
                 .foregroundColor(.white)

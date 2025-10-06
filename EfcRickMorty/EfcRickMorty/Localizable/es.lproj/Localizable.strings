@@ -1,0 +1,15 @@
+/* 
+  Localizable.strings
+  EfcRickMorty
+
+  Created by efulgencio on 6/10/25.
+  
+*/
+
+// Common
+"rick_morty"="Rick y Morty";
+"number_registers"="Registros cargados:";
+
+
+// SearchBarView
+"search_placeholder"="Introducir nombre para filtar ...";

@@ -68,7 +68,7 @@ extension ListView {
     
     private var header: some View {
         HStack {
-            Text("Rick and Morty")
+            Text(NSLocalizedString("rick_morty", comment: ""))
                 .font(.headline)
                 .fontWeight(.heavy)
         }
@@ -86,7 +86,7 @@ extension ListView {
     }
     
     private var registrosCargados: some View {
-        Text("Registros cargados: \(viewModel.characters?.data.count ?? 0)")
+        Text("\(NSLocalizedString("number_registers", comment: "")) \(viewModel.characters?.data.count ?? 0)")
             .infoBadgeStyle()
     }
     

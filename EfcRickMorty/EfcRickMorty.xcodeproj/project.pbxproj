@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -160,6 +160,10 @@
 		83FD429E2BD31946007B57A6 /* infoJson.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = infoJson.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		83363F562E93B7A40071EFBB /* Localizable */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Localizable; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
+
 /* Begin PBXFrameworksBuildPhase section */
 		83596CF02BCEE26E008EE8AD /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
@@ -207,6 +211,7 @@
 				83596D172BCEE480008EE8AD /* CustomViews */,
 				83596D662BCEEFC4008EE8AD /* Styles */,
 				83596D182BCEE491008EE8AD /* Extensions */,
+				83363F562E93B7A40071EFBB /* Localizable */,
 				83596CFA2BCEE271008EE8AD /* Assets.xcassets */,
 				83596CFC2BCEE271008EE8AD /* Preview Content */,
 			);
@@ -541,6 +546,9 @@
 			);
 			dependencies = (
 			);
+			fileSystemSynchronizedGroups = (
+				83363F562E93B7A40071EFBB /* Localizable */,
+			);
 			name = EfcRickMorty;
 			productName = EfcRickMorty;
 			productReference = 83596CF32BCEE26E008EE8AD /* EfcRickMorty.app */;
@@ -590,6 +598,7 @@
 			knownRegions = (
 				en,
 				Base,
+				es,
 			);
 			mainGroup = 83596CEA2BCEE26E008EE8AD;
 			productRefGroup = 83596CF42BCEE26E008EE8AD /* Products */;
@@ -718,6 +727,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -781,6 +791,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
