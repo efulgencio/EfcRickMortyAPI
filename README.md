@@ -432,18 +432,19 @@ Creado test para comprobar que es correcto la petición de la página número 3.
 
 final class TestListFeature: XCTestCase {
 
-    var sut: CombineManager!
+    var sut: CombineManager! // System Under Test: El objeto que vamos a testear
     
-    override func setUpWithError() throws {
+    override func setUpWithError() throws {  // Se ejectua antes de cada test
         super.setUp()
         sut = CombineManager.shared
     }
 
-    override func tearDownWithError() throws {
+    override func tearDownWithError() throws { // Se ejecuta después de cada test
         sut = nil
         super.tearDown()
     }
 
+    // Comprueba que el primer personaje devuelto por la API tiene el id = 1
     func testGetList_idFirst_equal_one() throws {
 
         let expectation = self.expectation(description: "Espera el resultado de la API")
@@ -459,19 +460,21 @@ final class TestListFeature: XCTestCase {
                 }, receiveValue: { response in
                     XCTAssertEqual(response.results[0].id, 1)
                 })
-            
+            // Espera máxima 10 segundos para que se cumpla la expectativa
             waitForExpectations(timeout: 10, handler: nil)
             cancellabe.cancel()
     
     }
 
+    // Comprueba la paginación de la página 3
     func testGetList_pageNumberThree_previousTwo_nextFour() throws {
 
+        // URLs esperadas para la paginación
         let previousUrl = "https://rickandmortyapi.com/api/character/?page=2"
         let nextUrl = "https://rickandmortyapi.com/api/character/?page=4"
-        
+        // Crea espectativas para la llamada asíncron
         let expectation = self.expectation(description: "Espera el resultado de la API")
-        
+        // Llamada a la API para la página 3
         let cancellabe = sut.getData(endpoint: EndPoint.character(.page("3")), type: ListDTO.self).sink (
             receiveCompletion: { completion in
                     switch completion {
