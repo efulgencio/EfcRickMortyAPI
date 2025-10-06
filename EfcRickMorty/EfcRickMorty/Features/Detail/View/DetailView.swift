@@ -81,15 +81,6 @@ extension DetailView {
             }.onTapGesture {
                 optionShow = OptionSelected.location
             }
-            VStack {
-                Text("Episode")
-                    .modifier(CustomModifierCardDetailItem(heightContent: CGFloat(40)))
-                Divider()
-                   .frame(height: 6)
-                   .background(optionShow == .episode ? Color.themeOption.optionThree : Color.themeOption.unSelectedOption)
-            }.onTapGesture {
-                optionShow = OptionSelected.episode
-            }
         }.padding(.top, 50)
     }
     
