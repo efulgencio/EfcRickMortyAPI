@@ -13,6 +13,7 @@ SwiftUI / Combine / MVVM / Testing
 9. [ViewModifier](#viewmodifier)
 10. [Testing](#testing)
 - [TestListFeature.swift](#testlistfeatureswift)
+- [URLProtocolStub.swift](#urlprotocolstubswift)
 
 ## Descripción
 
@@ -497,10 +498,12 @@ final class TestListFeature: XCTestCase {
 
 ```
 
+
+### URLProtocolStub.swift
+
 | Fichero | Descripción de los tests |
 |---------|-------------------------|
 | `URLProtocolStub.swift` | - Devuelve la request "canónica", es decir, la verión estándard de la petición.<br>- Simula la respuesta devolviendo datos, cabeceras y código HTTP o un error si está configurado. |
-
 
 
 ```Swift
