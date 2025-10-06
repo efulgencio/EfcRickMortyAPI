@@ -425,7 +425,6 @@ struct CustomModifierCardDetailItem: ViewModifier {
 
 
 ## ImageCache
----
 
 Este Actor ImageCache es un cache de imágenes en memoria, seguro para concurrencia: 
 - Descarga imágenes si no están en la caché
