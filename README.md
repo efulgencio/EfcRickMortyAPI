@@ -422,11 +422,9 @@ struct CustomModifierCardDetailItem: ViewModifier {
 ## Testing
 
 
-Creado test para comprobar que se recibe de la API correctamente el id del listado inicial de personajes.
-
-Creado test para comprobar que es correcto la petición de la página número 3.
-
-
+| Fichero | Descripción de los tests |
+|---------|-------------------------|
+| `TestListFeature.swift` | - Comprueba que el primer personaje devuelto por la API tiene el `id = 1`.<br>- Comprueba la paginación de la página 3. |
 
 ```Swift
 
