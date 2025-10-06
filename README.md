@@ -12,7 +12,7 @@ SwiftUI / Combine / MVVM / Testing
 8. [Views](#views)
 9. [ViewModifier](#viewmodifier)
 10. [Testing](#testing)
-- [TestListFeature.swift](#testlistfeature)
+- [TestListFeature.swift](#testlistfeature-swift)
 
 ## Descripción
 
