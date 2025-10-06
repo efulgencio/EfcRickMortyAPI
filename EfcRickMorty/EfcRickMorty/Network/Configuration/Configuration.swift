@@ -1,6 +1,6 @@
 //
 //  Configuration.swift
-//  EFCoinCap
+//  EfcRickMorty
 //
 //  Created by efulgencio on 12/4/24.
 //

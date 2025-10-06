@@ -1,5 +1,5 @@
 //
-//  CharacterModel.swift
+//  ListModel.swift
 //  EfcRickMorty
 //
 //  Created by efulgencio on 18/4/24.

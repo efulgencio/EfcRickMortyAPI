@@ -1,6 +1,6 @@
 //
 //  Assets.swift
-//  EFCoinCap
+//  EfcRickMorty
 //
 //  Created by efulgencio on 13/4/24.
 //

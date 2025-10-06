@@ -1,6 +1,6 @@
 //
 //  URLSessionManager.swift
-//  EFCoinCap
+//  EfcRickMorty
 //
 //  Created by efulgencio on 12/4/24.
 //
@@ -20,7 +20,7 @@ final class CombineManager {
     private let isLoggingEnabled: Bool = false
     #endif
 
-    private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "EFCoinCap", category: "Networking")
+    private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "EfcRickMorty", category: "Networking")
 
     private func prettyJSONString(from data: Data) -> String? {
         if let object = try? JSONSerialization.jsonObject(with: data, options: []),
