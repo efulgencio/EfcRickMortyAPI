@@ -12,6 +12,7 @@ SwiftUI / Combine / MVVM / Testing
 8. [Views](#views)
 9. [ViewModifier](#viewmodifier)
 10. [Testing](#testing)
+10.1 [TestListFeature.swift](#testlistfeature)
 
 ## Descripción
 
@@ -421,6 +422,7 @@ struct CustomModifierCardDetailItem: ViewModifier {
 
 ## Testing
 
+### TestListFeature.swift {#testlistfeature}
 
 | Fichero | Descripción de los tests |
 |---------|-------------------------|
