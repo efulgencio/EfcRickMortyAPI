@@ -21,7 +21,7 @@ final class TestListFeature: XCTestCase {
         sut = CombineManager.shared  // Initializes CombineManager
     }
 
-    // Runs after each test
+    /// Runs after each test
     override func tearDownWithError() throws {
         sut = nil  // Frees up resources
         super.tearDown()

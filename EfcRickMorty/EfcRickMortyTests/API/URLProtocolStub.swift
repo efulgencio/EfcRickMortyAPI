@@ -1,56 +1,56 @@
 import Foundation
 
-/// `URLProtocolStub` is a custom `URLProtocol` for intercepting network requests
-/// in unit tests. It allows simulating HTTP responses with data, errors, or delays.
+/// `URLProtocolStub` es un `URLProtocol` personalizado para interceptar peticiones de red
+/// en tests unitarios. Permite simular respuestas HTTP con datos, errores o retrasos.
 final class URLProtocolStub: URLProtocol {
     
-    /// Data to return in the simulated response.
+    /// Datos a devolver en la respuesta simulada.
     static var responseData: Data?
     
-    /// HTTP status code of the response (defaults to 200).
+    /// Código de estado HTTP de la respuesta (por defecto 200).
     static var statusCode: Int = 200
     
-    /// HTTP headers for the simulated response.
+    /// Cabeceras HTTP de la respuesta simulada.
     static var headers: [String: String] = [:]
     
-    /// Counter for intercepted requests (useful for validation in tests).
+    /// Contador de peticiones interceptadas (útil para validar en tests).
     static var requestCount: Int = 0
     
-    /// Error to return instead of a successful response (simulates network failures).
+    /// Error a devolver en lugar de una respuesta correcta (simula fallos de red).
     static var error: Error?
     
-    /// Artificial delay before responding (simulates network latency).
+    /// Tiempo de espera artificial antes de responder (simula latencia de red).
     static var responseDelay: TimeInterval = 0
 
     // MARK: - URLProtocol Overrides
     
-    /// Determines if this protocol can handle a given request.
+    /// Determina si este protocolo puede manejar una petición dada.
     ///
-    /// - Parameter request: The `URLRequest` to be evaluated.
-    /// - Returns: `true` to indicate that all requests are intercepted.
+    /// - Parameter request: La `URLRequest` que se va a evaluar.
+    /// - Returns: `true` para indicar que se interceptan todas las peticiones.
     override class func canInit(with request: URLRequest) -> Bool {
         return true
     }
 
-    /// Returns the "canonical" request, i.e., the standard version of the request.
+    /// Devuelve la request "canónica", es decir, la versión estándar de la petición.
     ///
-    /// - Parameter request: The original `URLRequest`.
-    /// - Returns: The same request without modifications.
+    /// - Parameter request: La `URLRequest` original.
+    /// - Returns: La misma request sin modificaciones.
     override class func canonicalRequest(for request: URLRequest) -> URLRequest {
         request
     }
 
-    /// Starts loading the intercepted request.
-    /// Simulates the response by returning data, headers, and HTTP code, or an error if configured.
+    /// Inicia la carga de la petición interceptada.
+    /// Simula la respuesta devolviendo datos, cabeceras y código HTTP o un error si está configurado.
     ///
-    /// - Behavior:
-    ///   1. Validates the request's URL.
-    ///   2. Increments the request counter.
-    ///   3. If an error was configured, it's returned to the client.
-    ///   4. Otherwise, it constructs an `HTTPURLResponse` with `statusCode` and `headers`.
-    ///   5. Returns the data (`responseData` or empty).
-    ///   6. Marks the loading as finished.
-    ///   7. If `responseDelay` is set, it waits for that duration before responding.
+    /// - Comportamiento:
+    ///   1. Valida la URL de la request.
+    ///   2. Incrementa el contador de peticiones.
+    ///   3. Si se configuró un error, lo devuelve al cliente.
+    ///   4. Si no, construye un `HTTPURLResponse` con `statusCode` y `headers`.
+    ///   5. Devuelve los datos (`responseData` o vacío).
+    ///   6. Marca la carga como finalizada.
+    ///   7. Si hay `responseDelay`, espera ese tiempo antes de responder.
     override func startLoading() {
         guard let url = request.url else {
             client?.urlProtocol(self, didFailWithError: URLError(.badURL))
@@ -74,3 +74,17 @@ final class URLProtocolStub: URLProtocol {
             } else {
                 self.client?.urlProtocol(self, didLoad: Data())
             }
+            self.client?.urlProtocolDidFinishLoading(self)
+        }
+
+        if URLProtocolStub.responseDelay > 0 {
+            DispatchQueue.global().asyncAfter(deadline: .now() + URLProtocolStub.responseDelay, execute: respond)
+        } else {
+            respond()
+        }
+    }
+
+    /// Detiene la carga de la petición.
+    /// - Nota: En este stub no es necesario implementar lógica de cancelación.
+    override func stopLoading() {}
+}

@@ -59,7 +59,6 @@
 		835CCA172BD6EF4C000EDA8D /* CardDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 835CCA162BD6EF4C000EDA8D /* CardDetail.swift */; };
 		835CCA192BD6F0EC000EDA8D /* SearchBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 835CCA182BD6F0EC000EDA8D /* SearchBarView.swift */; };
 		837993D92BD59A74002D04BE /* TestListFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 837993D82BD59A74002D04BE /* TestListFeature.swift */; };
-		837EDE1D2E9416B40012CDFF /* ListRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 837EDE1C2E9416A90012CDFF /* ListRepositoryTests.swift */; };
 		83DA74342BD0672800891AD5 /* EndPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83DA74332BD0672800891AD5 /* EndPoint.swift */; };
 		83DA74362BD0F0F000891AD5 /* URLRequestMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83DA74352BD0F0F000891AD5 /* URLRequestMethod.swift */; };
 		83DA74382BD0F30E00891AD5 /* ListDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83DA74372BD0F30E00891AD5 /* ListDTO.swift */; };
@@ -143,7 +142,6 @@
 		835CCA182BD6F0EC000EDA8D /* SearchBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBarView.swift; sourceTree = "<group>"; };
 		837993CC2BD59890002D04BE /* EfcRickMortyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EfcRickMortyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		837993D82BD59A74002D04BE /* TestListFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestListFeature.swift; sourceTree = "<group>"; };
-		837EDE1C2E9416A90012CDFF /* ListRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListRepositoryTests.swift; sourceTree = "<group>"; };
 		83DA74332BD0672800891AD5 /* EndPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndPoint.swift; sourceTree = "<group>"; };
 		83DA74352BD0F0F000891AD5 /* URLRequestMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLRequestMethod.swift; sourceTree = "<group>"; };
 		83DA74372BD0F30E00891AD5 /* ListDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListDTO.swift; sourceTree = "<group>"; };
@@ -164,6 +162,7 @@
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		83363F562E93B7A40071EFBB /* Localizable */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Localizable; sourceTree = "<group>"; };
+		837EDE222E94279E0012CDFF /* Mocks */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Mocks; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -454,6 +453,7 @@
 		837993CD2BD59890002D04BE /* EfcRickMortyTests */ = {
 			isa = PBXGroup;
 			children = (
+				837EDE222E94279E0012CDFF /* Mocks */,
 				837993D72BD59A25002D04BE /* API */,
 			);
 			path = EfcRickMortyTests;
@@ -462,7 +462,6 @@
 		837993D72BD59A25002D04BE /* API */ = {
 			isa = PBXGroup;
 			children = (
-				837EDE1C2E9416A90012CDFF /* ListRepositoryTests.swift */,
 				837993D82BD59A74002D04BE /* TestListFeature.swift */,
 				83363F4A2E9388E00071EFBB /* URLProtocolStub.swift */,
 				83363F4C2E9388E10071EFBB /* TestListModelMapping.swift */,
@@ -569,6 +568,9 @@
 			);
 			dependencies = (
 				837993D12BD59890002D04BE /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				837EDE222E94279E0012CDFF /* Mocks */,
 			);
 			name = EfcRickMortyTests;
 			productName = EfcRickMortyTests;
@@ -707,7 +709,6 @@
 				83363F532E9388EB0071EFBB /* TestListViewModel.swift in Sources */,
 				837993D92BD59A74002D04BE /* TestListFeature.swift in Sources */,
 				83363F4B2E9388E00071EFBB /* URLProtocolStub.swift in Sources */,
-				837EDE1D2E9416B40012CDFF /* ListRepositoryTests.swift in Sources */,
 				83363F552E9388EB0071EFBB /* TestEndPoint.swift in Sources */,
 				83363F4D2E9388E10071EFBB /* TestListModelMapping.swift in Sources */,
 				83363F512E9388EA0071EFBB /* TestDetailViewModel.swift in Sources */,

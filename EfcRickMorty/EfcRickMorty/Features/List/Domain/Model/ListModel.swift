@@ -26,7 +26,11 @@ public final class ListModel: RandomAccessCollection, Decodable {
     func fromDto(dto: ListDTO) {
         self.numberPages = dto.info.pages
         for character in dto.results {
-            let item = ListItem(id: character.id, name: character.name, image: character.image!)
+            // This is a simple sample motive use of DTO. I want to change
+            // presentation from back to front, with type dates is more clear the propouse
+            let uppercasedName = character.name.uppercased()
+                        
+            let item = ListItem(id: character.id, name: uppercasedName, image: character.image!)
             self.data.append(item)
         }
     }

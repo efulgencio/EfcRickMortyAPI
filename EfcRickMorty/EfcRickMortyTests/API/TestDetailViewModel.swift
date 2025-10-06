@@ -20,7 +20,7 @@ final class TestDetailViewModel: XCTestCase {
     ///     - The character data is loaded correctly.
     func test_getDetail_success_updates_state_and_data() {
         // 1. Prepare a simulated detail model
-        var model = DetailModel()
+        let model = DetailModel()
         model.data = DetailItem.getMock() // mock character with id = 1
 
         // 2. Create a mock use case that always returns the simulated model
