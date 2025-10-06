@@ -59,27 +59,7 @@ final class ListViewModel: ObservableObject {
             }
             .store(in: &cancellables)
     }
-cxd
-/*
-    private func addSubscriberForComponents() {
-        $clearSearchText
-            .sink { [weak self] (clearSearch) in
-                if clearSearch {
-                    self?.getList()
-                }
-            }
-            .store(in: &cancellables)
-        
-        $searchText
-            .removeDuplicates()
-            .debounce(for: .milliseconds(500), scheduler: RunLoop.main)
-            .sink { [weak self] text in
-                self?.debouncedSearchText = text
-                self?.performSearch(with: text)
-            }
-            .store(in: &cancellables)
-    }
- */
+
     private func performSearch(with text: String) {
         // Si el texto está vacío, recarga la lista completa
         if text.isEmpty {
@@ -152,6 +132,7 @@ cxd
     // Carga siguiente página automática
     func loadNextPage() {
         guard !isLoading,
+              searchText.isEmpty, // <-- AÑADIDO: Solo pagina si no hay búsqueda
               numberPage < numberPagesForNavigate else { return }
         let nextPage = numberPage + 1
         getListByPage(page: "\(nextPage)")

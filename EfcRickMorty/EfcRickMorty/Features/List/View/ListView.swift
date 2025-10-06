@@ -91,7 +91,7 @@ extension ListView {
     }
     
     private var listado: some View {
-        ForEach(viewModel.characters?.data ?? []) { result in
+        ForEach(viewModel.charactersFiltered?.data ?? []) { result in // <--- CORREGIDO
             VStack(spacing: 0) {
                 ItemCharacter(item: result)
                     .frame(height: 90)
@@ -101,7 +101,7 @@ extension ListView {
                     }
                     .onAppear {
                         // Detectar último item para cargar siguiente página
-                        if result.id == viewModel.characters?.data.last?.id {
+                        if result.id == viewModel.charactersFiltered?.data.last?.id { // <--- CORREGIDO
                             viewModel.loadNextPage()
                         }
                     }
