@@ -2,7 +2,7 @@
 //  LoadingView.swift
 //  EfcRickMorty
 //
-//  Created by efulgencio on 20/4/24.
+//  Created by efulgencio on 6/10/25.
 //
 
 import SwiftUI

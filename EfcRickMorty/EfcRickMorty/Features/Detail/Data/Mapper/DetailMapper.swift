@@ -2,7 +2,7 @@
 //  DetailMapper.swift
 //  EfcRickMorty
 //
-//  Created by efulgencio on 18/4/24.
+//  Created by efulgencio on 6/10/25.
 //
 
 import Foundation

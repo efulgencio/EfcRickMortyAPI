@@ -2,7 +2,7 @@
 //  CardDetail.swift
 //  EfcRickMorty
 //
-//  Created by efulgencio on 22/4/24.
+//  Created by efulgencio on 6/10/25.
 //
 
 import SwiftUI
