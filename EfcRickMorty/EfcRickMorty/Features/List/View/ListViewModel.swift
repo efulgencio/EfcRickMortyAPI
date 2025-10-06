@@ -2,7 +2,7 @@
 //  ListViewModel.swift
 //  EfcRickMorty
 //
-//  Created by efulgencio on 16/4/24.
+//  Created by efulgencio on 6/10/25.
 //
 
 import Foundation
@@ -14,6 +14,7 @@ final class ListViewModel: ObservableObject {
     @Published var alertItem: AlertItem?
     @Published var searchText: String = ""
     @Published var clearSearchText: Bool = false
+    @Published var debouncedSearchText: String = ""
     
     private var listUseCase: ListUseCase
     private var task: Cancellable?
@@ -32,6 +33,35 @@ final class ListViewModel: ObservableObject {
     }
     
     private func addSubscriberForComponents() {
+        // Combina clearSearchText y searchText con debounce
+        Publishers.CombineLatest($searchText, $clearSearchText)
+            .removeDuplicates { lhs, rhs in
+                lhs.0 == rhs.0 && lhs.1 == rhs.1
+            }
+            .debounce(for: .milliseconds(500), scheduler: RunLoop.main)
+            .sink { [weak self] (text, clearSearch) in
+                guard let self = self else { return }
+
+                if clearSearch {
+                    self.clearSearchText = false // resetear flag
+                    self.getList()
+                } else {
+                    // Solo realizar búsqueda si tiene 3 o más caracteres
+                    if text.count >= 3 {
+                        self.performSearch(with: text)
+                    } else if text.isEmpty {
+                        self.getList() // si borra todo, recarga lista completa
+                    } else {
+                        // opcional: limpiar resultados si < 3 caracteres
+                        self.charactersFiltered = self.characters
+                    }
+                }
+            }
+            .store(in: &cancellables)
+    }
+cxd
+/*
+    private func addSubscriberForComponents() {
         $clearSearchText
             .sink { [weak self] (clearSearch) in
                 if clearSearch {
@@ -39,6 +69,36 @@ final class ListViewModel: ObservableObject {
                 }
             }
             .store(in: &cancellables)
+        
+        $searchText
+            .removeDuplicates()
+            .debounce(for: .milliseconds(500), scheduler: RunLoop.main)
+            .sink { [weak self] text in
+                self?.debouncedSearchText = text
+                self?.performSearch(with: text)
+            }
+            .store(in: &cancellables)
+    }
+ */
+    private func performSearch(with text: String) {
+        // Si el texto está vacío, recarga la lista completa
+        if text.isEmpty {
+            getList()
+        } else {
+            isLoading = true
+            task = listUseCase.getList(text).sink(
+                receiveCompletion: { [weak self] completion in
+                    self?.handleCompletion(completion: completion)
+                },
+                receiveValue: { [weak self] response in
+                    DispatchQueue.main.async {
+                        self?.charactersFiltered = response
+                        self?.viewModelState = .loadedView
+                        self?.isLoading = false
+                    }
+                }
+            )
+        }
     }
     
     // Carga inicial o búsqueda
