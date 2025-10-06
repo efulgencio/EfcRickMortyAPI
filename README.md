@@ -422,7 +422,7 @@ struct CustomModifierCardDetailItem: ViewModifier {
 
 ## Testing
 
-### TestListFeature.swift {#testlistfeature}
+### TestListFeature.swift
 
 | Fichero | Descripción de los tests |
 |---------|-------------------------|
