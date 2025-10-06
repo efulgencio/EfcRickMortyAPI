@@ -9,34 +9,45 @@ import SwiftUI
 
 struct ItemCharacter: View {
     
-    let item: ListItem
+    let item: Any // ListItem
     
     var body: some View {
-        VStack(spacing: 5) {
-            HStack{
-                Text("\(item.id)")
-                    .padding(.leading, 20)
-                HStack {
-                    Text("\(item.name)")
-                        .padding(.horizontal, 20)
-                    Spacer()
-                    CachedAsyncImage(
-                        url: URL(string: item.image),
-                        placeholder: Image(systemName: "person.crop.circle")
-                    )
-                    .frame(width: 50, height: 50)
-                    .clipShape(RoundedRectangle(cornerRadius: 25))
-                    .padding()
-                }
-                .modifier(CustomModifierCardDetailItem())
-                .shadow(radius: 20)
+        if let model = item as? ListItem {
+            VStack(spacing: 5) {
+                HStack{
+                    Text("\(model.id)")
+                        .padding(.leading, 20)
+                    HStack {
+                        Text("\(model.name)")
+                            .padding(.horizontal, 20)
+                        Spacer()
+                        CachedAsyncImage(
+                            url: URL(string: model.image),
+                            placeholder: Image(systemName: "person.crop.circle")
+                        )
+                        .frame(width: 50, height: 50)
+                        .clipShape(RoundedRectangle(cornerRadius: 25))
+                        .padding()
+                    }
+                    .modifier(CustomModifierCardDetailItem())
+                    .shadow(radius: 20)
 
-            }
-            .frame(maxWidth: .infinity)
-            .background(Color.themeItem.body)
-            .clipShape(RoundedCorner(radius: 30, corners: [.bottomLeft, .topRight]))
-        
-        }.padding(20)
+                }
+                .frame(maxWidth: .infinity)
+                .background(Color.themeItem.body)
+                .clipShape(RoundedCorner(radius: 30, corners: [.bottomLeft, .topRight]))
+            
+            }.padding(20)
+         } else if let message = item as? String, message == "no encontrado" {
+            // Vista especial para "no encontrado"
+            Text("No se encontraron registros 🧐")
+                .foregroundColor(.red)
+                .font(.title3)
+                .frame(maxWidth: .infinity, alignment: .center)
+        } else {
+            // Fallback si no es un modelo o el mensaje especial
+            EmptyView()
+        }
     }
     
     private var imagePlaceHolder: some View {

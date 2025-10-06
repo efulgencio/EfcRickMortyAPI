@@ -25,6 +25,8 @@ final class ListViewModel: ObservableObject {
     @Published var numberPage: Int = 0
     @Published var numberPagesForNavigate: Int = 0
     @Published var isLoading: Bool = false
+    // Nuevo estado para indicar que la búsqueda no devolvió resultados
+    @Published var searchDidNotFindResults: Bool = false
     
     init(listUseCase: ListUseCase = .live) {
         self.listUseCase = listUseCase
@@ -61,18 +63,52 @@ final class ListViewModel: ObservableObject {
     }
 
     private func performSearch(with text: String) {
-        // Si el texto está vacío, recarga la lista completa
         if text.isEmpty {
             getList()
         } else {
             isLoading = true
+            self.searchDidNotFindResults = false
+            
             task = listUseCase.getList(text).sink(
                 receiveCompletion: { [weak self] completion in
-                    self?.handleCompletion(completion: completion)
+                    DispatchQueue.main.async {
+                        self?.isLoading = false
+                        
+                        if case let .failure(error) = completion {
+                            // *** NUEVA LÓGICA CLAVE: Manejar el fallo de la API AQUÍ ***
+                            
+                            // NOTA: Si la API de Rick & Morty devuelve un error 404 (NetworkError)
+                            // cuando no hay resultados de búsqueda, usamos eso como señal.
+                            // Si tu `listUseCase` mapea el error 404 de "Not Found" a un error específico,
+                            // deberías usarlo aquí. Por ahora, asumiremos que si hay un error
+                            // Y estamos en una búsqueda activa, es "no encontrado".
+                            
+                            // Opción 1: Si quieres manejar el fallo de "No encontrado" como un caso de error específico
+                            // if error is NetworkError.notFound { ... }
+                            
+                            // Opción 2 (Simple y funcional en este contexto): Si ocurre un fallo,
+                            // asumimos que es "no encontrado" y limpiamos la lista
+                            
+                            self?.charactersFiltered = ListModel() // Limpiamos la lista
+                            self?.searchDidNotFindResults = true
+                            self?.viewModelState = .filteredView // MANTENER ESTADO VISIBLE
+                            
+                            // IMPORTANTE: NO LLAMAMOS a self?.handleCompletion(completion: completion)
+                            // para evitar que se muestre el error genérico .errorView.
+                        }
+                    }
                 },
                 receiveValue: { [weak self] response in
                     DispatchQueue.main.async {
-                        self?.charactersFiltered = response
+                        // *** LÓGICA DE VALOR: Comprobar si se obtuvieron resultados. ***
+                        if response.data.isEmpty {
+                            self?.charactersFiltered = ListModel()
+                            self?.searchDidNotFindResults = true
+                        } else {
+                            self?.charactersFiltered = response
+                            self?.searchDidNotFindResults = false
+                        }
+                        
                         self?.viewModelState = .loadedView
                         self?.isLoading = false
                     }
@@ -85,6 +121,7 @@ final class ListViewModel: ObservableObject {
     func getList() {
         self.numberPage = 0
         self.isLoading = true
+        self.searchDidNotFindResults = false
         task = listUseCase.getList(searchText).sink(
             receiveCompletion: { [weak self] completion in
                 self?.handleCompletion(completion: completion)

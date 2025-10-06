@@ -12,16 +12,16 @@ public final class ListModel: RandomAccessCollection, Decodable {
     public var numberPages: Int = 0
     public init() { self.data = [ListItem]() }
 
-       public var startIndex: Int { data.startIndex }
-       public var endIndex: Int { data.endIndex }
-       
-       public func index(after i: Int) -> Int {
-           data.index(after: i)
-       }
-    
-       public subscript(position: Int) -> ListItem {
-           data[position]
-       }
+    public var startIndex: Int { data.startIndex }
+    public var endIndex: Int { data.endIndex }
+
+    public func index(after i: Int) -> Int {
+       data.index(after: i)
+    }
+
+    public subscript(position: Int) -> ListItem {
+       data[position]
+    }
     
     func fromDto(dto: ListDTO) {
         self.numberPages = dto.info.pages

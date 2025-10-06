@@ -46,6 +46,9 @@ struct ListView: View {
                                 }
                             }
                         }
+                        .sheet(isPresented: $showDetailView) { // APLICALO AQUÍ
+                            DetailView()
+                        }
                     
                         PaginationView(currentPage: $viewModel.numberPage, totalPages: viewModel.numberPagesForNavigate) { selectedPage in
                             viewModel.searchText = ""
@@ -91,24 +94,40 @@ extension ListView {
     }
     
     private var listado: some View {
-        ForEach(viewModel.charactersFiltered?.data ?? []) { result in // <--- CORREGIDO
-            VStack(spacing: 0) {
-                ItemCharacter(item: result)
-                    .frame(height: 90)
-                    .onTapGesture {
-                        characterData.idSelected = result.id
-                        showDetailView = true
+        // 1. Obtener los datos filtrados
+        let characters = viewModel.charactersFiltered?.data ?? []
+
+        // 2. Comprobar si hay resultados
+        if viewModel.searchDidNotFindResults {
+            // Mostrar "no encontrado" solo si hay un texto de búsqueda y no hay resultados
+            return AnyView(
+                VStack {
+                  // Muestra el mensaje de "no encontrado"
+                  ItemCharacter(item: "no encontrado")
+                      .frame(height: 90)
+                  Spacer() // Para que el mensaje se quede arriba y no en el centro
+                }
+            )
+        } else {
+            // Mostrar el listado normal
+            return AnyView(
+                ForEach(characters) { result in
+                    VStack(spacing: 0) {
+                        ItemCharacter(item: result)
+                            .frame(height: 90)
+                            .onTapGesture {
+                                characterData.idSelected = result.id
+                                showDetailView = true
+                            }
+                            .onAppear {
+                                // Detectar último item para cargar siguiente página
+                                if result.id == characters.last?.id {
+                                    viewModel.loadNextPage()
+                                }
+                            }
                     }
-                    .onAppear {
-                        // Detectar último item para cargar siguiente página
-                        if result.id == viewModel.charactersFiltered?.data.last?.id { // <--- CORREGIDO
-                            viewModel.loadNextPage()
-                        }
-                    }
-            }
-            .sheet(isPresented: $showDetailView) {
-                DetailView()
-            }
+                }
+            )
         }
     }
 }
