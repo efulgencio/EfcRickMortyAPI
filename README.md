@@ -14,6 +14,8 @@ SwiftUI / Combine / MVVM / Testing
 10. [Testing](#testing)
 - [TestListFeature.swift](#testlistfeatureswift)
 - [URLProtocolStub.swift](#urlprotocolstubswift)
+- [TestListModelMapping.swift](#testlistmodelmappingswift)
+- [TestCombineManager.swift](#testcombinemanagerswift)
 
 ## Descripción
 
@@ -601,6 +603,8 @@ final class URLProtocolStub: URLProtocol {
 
 ```
 
+### TestListModelMapping.swift
+
 | Fichero | Descripción de los tests |
 |---------|-------------------------|
 | `TestListModelMapping.swift` | - Pruebas unitarias para verificar la correcta codificación decodificación y mapeo del DTO. |
@@ -644,7 +648,7 @@ final class TestListModelMapping: XCTestCase {
 
 ```
 
-
+### TestCombineManager.swift
 
 | Fichero | Descripción de los tests |
 |---------|-------------------------|
