@@ -2,29 +2,29 @@ import XCTest
 import Combine
 @testable import EfcRickMorty
 
-/// `TestCombineManager` contiene pruebas unitarias para verificar
-/// el comportamiento del `CombineManager` en operaciones de red simuladas.
+/// `TestCombineManager` contains unit tests to verify the behavior
+/// of the `CombineManager` in simulated network operations.
 ///
-/// Se utiliza `URLProtocolStub` para interceptar peticiones de red y devolver
-/// respuestas controladas sin necesidad de un servidor real.
+/// `URLProtocolStub` is used to intercept network requests and return
+/// controlled responses without the need for a real server.
 final class TestCombineManager: XCTestCase {
     
-    /// Conjunto de suscripciones de Combine que deben liberarse
-    /// al finalizar cada test.
+    /// Set of Combine subscriptions that must be released
+    /// at the end of each test.
     var cancellables = Set<AnyCancellable>()
 
-    // MARK: - Ciclo de vida del test
+    // MARK: - Test Lifecycle
     
-    /// Configura el entorno de pruebas antes de cada ejecución.
-    /// - Registra `URLProtocolStub` para que intercepte todas las peticiones de red.
+    /// Sets up the test environment before each execution.
+    /// - Registers `URLProtocolStub` to intercept all network requests.
     override func setUp() {
         super.setUp()
         URLProtocol.registerClass(URLProtocolStub.self)
     }
 
-    /// Limpia el entorno después de cada prueba.
-    /// - Elimina el registro del stub.
-    /// - Vacía el conjunto de suscripciones.
+    /// Cleans up the environment after each test.
+    /// - Unregisters the stub.
+    /// - Clears the set of subscriptions.
     override func tearDown() {
         URLProtocol.unregisterClass(URLProtocolStub.self)
         cancellables.removeAll()
@@ -33,16 +33,16 @@ final class TestCombineManager: XCTestCase {
 
     // MARK: - Tests
     
-    /// Verifica que cuando `CombineManager.getData` recibe una respuesta HTTP exitosa (200)
-    /// con un JSON válido (`jsonListDTO`), se decodifica correctamente a `ListDTO`.
+    /// Verifies that when `CombineManager.getData` receives a successful HTTP response (200)
+    /// with valid JSON (`jsonListDTO`), it is correctly decoded to `ListDTO`.
     ///
-    /// - Pasos probados:
-    ///   1. Se configura el `URLProtocolStub` con `statusCode = 200` y datos válidos.
-    ///   2. Se hace la llamada a `getData`.
-    ///   3. Se espera que la decodificación produzca un `ListDTO` válido.
-    ///   4. Se valida que el primer elemento tenga `id = 1`.
+    /// - Steps tested:
+    ///   1. `URLProtocolStub` is configured with `statusCode = 200` and valid data.
+    ///   2. The `getData` call is made.
+    ///   3. Expects the decoding to produce a valid `ListDTO`.
+    ///   4. Validates that the first element has `id = 1`.
     func test_getData_success_decodes_ListDTO() {
-        // Prepara respuesta simulada
+        // Prepare mocked response
         URLProtocolStub.statusCode = 200
         URLProtocolStub.responseData = jsonListDTO
 
@@ -57,7 +57,7 @@ final class TestCombineManager: XCTestCase {
                     }
                 },
                 receiveValue: { dto in
-                    XCTAssertEqual(dto.results.first?.id, 1, "El primer resultado debe tener id = 1")
+                    XCTAssertEqual(dto.results.first?.id, 1, "The first result must have id = 1")
                     exp.fulfill()
                 }
             )
@@ -66,14 +66,14 @@ final class TestCombineManager: XCTestCase {
         wait(for: [exp], timeout: 2)
     }
 
-    /// Verifica que cuando `CombineManager.getData` recibe una respuesta HTTP con error (404),
-    /// se emite un `NetworkError` y no un valor decodificado.
+    /// Verifies that when `CombineManager.getData` receives an HTTP error response (404),
+    /// a `NetworkError` is emitted and not a decoded value.
     ///
-    /// - Pasos probados:
-    ///   1. Se configura el `URLProtocolStub` con `statusCode = 404` y datos vacíos.
-    ///   2. Se hace la llamada a `getData`.
-    ///   3. Se espera que el `sink` reciba un `.failure`.
-    ///   4. Se valida que **no** se reciba ningún valor decodificado.
+    /// - Steps tested:
+    ///   1. `URLProtocolStub` is configured with `statusCode = 404` and empty data.
+    ///   2. The `getData` call is made.
+    ///   3. Expects the `sink` to receive a `.failure`.
+    ///   4. Validates that **no** decoded value is received.
     func test_getData_http_error_maps_to_NetworkError() {
         URLProtocolStub.statusCode = 404
         URLProtocolStub.responseData = Data()
@@ -89,7 +89,7 @@ final class TestCombineManager: XCTestCase {
                     }
                 },
                 receiveValue: { _ in
-                    XCTFail("La llamada no debería completarse con éxito en caso de error HTTP")
+                    XCTFail("The call should not complete successfully in case of an HTTP error")
                 }
             )
             .store(in: &cancellables)

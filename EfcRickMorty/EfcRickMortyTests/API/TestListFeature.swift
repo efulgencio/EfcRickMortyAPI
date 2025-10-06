@@ -12,78 +12,78 @@ import XCTest
 
 final class TestListFeature: XCTestCase {
 
-    // System Under Test: el objeto que vamos a testear
+    // System Under Test: the object we are going to test
     var sut: CombineManager!
     
-    // Se ejecuta antes de cada test
+    // Runs before each test
     override func setUpWithError() throws {
         super.setUp()
-        sut = CombineManager.shared  // Inicializa CombineManager
+        sut = CombineManager.shared  // Initializes CombineManager
     }
 
-    // Se ejecuta después de cada test
+    // Runs after each test
     override func tearDownWithError() throws {
-        sut = nil  // Libera recursos
+        sut = nil  // Frees up resources
         super.tearDown()
     }
 
-    // Test que comprueba que el primer personaje devuelto por la API tiene id = 1
+    // Test that checks if the first character returned by the API has id = 1
     func testGetList_idFirst_equal_one() throws {
 
-        // Crear expectativa para la llamada asíncrona
-        let expectation = self.expectation(description: "Espera el resultado de la API")
+        // Create an expectation for the asynchronous call
+        let expectation = self.expectation(description: "Waits for the API result")
         
-        // Llamada al API usando Combine
+        // API call using Combine
         let cancellabe = sut.getData(endpoint: EndPoint.character(.all), type: ListDTO.self).sink (
             receiveCompletion: { completion in
                 switch completion {
                 case .finished:
-                    // Si finaliza correctamente, se cumple la expectativa
+                    // If it finishes correctly, the expectation is fulfilled
                     expectation.fulfill()
                 case .failure(let error):
-                    // Si hay error, el test falla
+                    // If there is an error, the test fails
                     XCTFail("Error: \(error.localizedDescription)")
                 }
             }, receiveValue: { response in
-                // Comprobación del primer personaje
+                // Check the first character
                 XCTAssertEqual(response.results[0].id, 1)
             })
         
-        // Espera máxima de 10 segundos para que se cumpla la expectativa
+        // Maximum wait of 10 seconds for the expectation to be fulfilled
         waitForExpectations(timeout: 10, handler: nil)
-        cancellabe.cancel()  // Cancela la suscripción para limpiar memoria
+        cancellabe.cancel()  // Cancel the subscription to clean up memory
     }
     
-    // Test que comprueba la paginación de la página 3
+    // Test that checks the pagination of page 3
     func testGetList_pageNumberThree_previousTwo_nextFour() throws {
 
-        // URLs esperadas para la paginación
+        // Expected URLs for pagination
         let previousUrl = "https://rickandmortyapi.com/api/character/?page=2"
         let nextUrl = "https://rickandmortyapi.com/api/character/?page=4"
         
-        // Crear expectativa para la llamada asíncrona
-        let expectation = self.expectation(description: "Espera el resultado de la API")
+        // Create an expectation for the asynchronous call
+        let expectation = self.expectation(description: "Waits for the API result")
         
-        // Llamada al API para la página 3
+        // API call for page 3
         let cancellabe = sut.getData(endpoint: EndPoint.character(.page("3")), type: ListDTO.self).sink (
             receiveCompletion: { completion in
                 switch completion {
                 case .finished:
-                    // Si finaliza correctamente, se cumple la expectativa
+                    // If it finishes correctly, the expectation is fulfilled
                     expectation.fulfill()
                 case .failure(let error):
-                    // Si hay error, el test falla
+                    // If there is an error, the test fails
                     XCTFail("Error: \(error.localizedDescription)")
                 }
             }, receiveValue: { response in
-                // Comprobación de URLs de paginación
+                // Check pagination URLs
                 XCTAssertEqual(response.info.prev, previousUrl)
                 XCTAssertEqual(response.info.next, nextUrl)
             })
         
-        // Espera máxima de 10 segundos
+        // Maximum wait of 10 seconds
         waitForExpectations(timeout: 10, handler: nil)
-        cancellabe.cancel()  // Cancela la suscripción
+        cancellabe.cancel()  // Cancel the subscription
     }
 
 }

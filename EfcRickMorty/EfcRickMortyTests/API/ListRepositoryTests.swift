@@ -7,66 +7,66 @@
 
 import XCTest
 import Combine
-@testable import EfcRickMorty // Reemplaza "EfcRickMorty" con el nombre de tu proyecto
+@testable import EfcRickMorty
 
 final class ListRepositoryTests: XCTestCase {
 
-    // Almacena las suscripciones de Combine para que no se liberen de memoria prematuramente.
+    // Stores the Combine subscriptions so they are not prematurely deallocated.
     var cancellables: Set<AnyCancellable>!
 
     override func setUp() {
         super.setUp()
-        // Inicializamos el set de cancellables antes de cada test.
+        // We initialize the set of cancellables before each test.
         cancellables = []
     }
 
     override func tearDown() {
-        // Limpiamos el set después de cada test.
+        // We clear the set after each test.
         cancellables = nil
         super.tearDown()
     }
 
     func test_getListMock_whenDataIsLoaded_thenCharactersGenderShouldBeMale() {
-        // 1. ARRANGE (Preparación)
+        // 1. ARRANGE
         
-        // Creamos una expectativa para manejar la llamada asíncrona del publicador.
-        let expectation = XCTestExpectation(description: "Recibir personajes del mock y verificar el género.")
+        // We create an expectation to handle the asynchronous call of the publisher.
+        let expectation = XCTestExpectation(description: "Receive characters from the mock and verify the gender.")
         
-        // Usamos el mock que ya tienes definido. Este es nuestro "System Under Test" (SUT).
+        // We use the mock you already have defined. This is our "System Under Test" (SUT).
         let repositoryMock = ListRepository.mock
         
         var receivedCharacters: [Character] = []
 
-        // 2. ACT (Acción)
+        // 2. ACT
         
-        // Nos suscribimos al publicador devuelto por la función getList.
-        // El parámetro `forFilter` puede ser cualquier string, ya que el mock no lo utiliza.
+        // We subscribe to the publisher returned by the getList function.
+        // The `forFilter` parameter can be any string, as the mock does not use it.
         repositoryMock.getList("")
             .sink(receiveCompletion: { completion in
-                // Si la suscripción falla, el test debe fallar.
+                // If the subscription fails, the test must fail.
                 if case .failure(let error) = completion {
-                    XCTFail("La obtención de datos del mock falló con el error: \(error)")
+                    XCTFail("Fetching data from the mock failed with error: \(error)")
                 }
             }, receiveValue: { listDTO in
-                // Guardamos los personajes recibidos.
+                // We save the received characters.
                 receivedCharacters = listDTO.results
                 
-                // La prueba ha recibido los datos, así que cumplimos la expectativa.
+                // The test has received the data, so we fulfill the expectation.
                 expectation.fulfill()
             })
-            .store(in: &cancellables) // Guardamos la suscripción.
+            .store(in: &cancellables) // We store the subscription.
 
-        // Esperamos a que la expectativa se cumpla, con un timeout por si algo va mal.
+        // We wait for the expectation to be fulfilled, with a timeout in case something goes wrong.
         wait(for: [expectation], timeout: 1.0)
         
-        // 3. ASSERT (Verificación)
+        // 3. ASSERT
         
-        // Nos aseguramos de que hemos recibido personajes.
-        XCTAssertFalse(receivedCharacters.isEmpty, "No se recibieron personajes del mock.")
+        // We make sure that we have received characters.
+        XCTAssertFalse(receivedCharacters.isEmpty, "No characters were received from the mock.")
         
-        // Verificamos que CADA personaje en la lista recibida tiene el género "Male".
+        // We verify that EVERY character in the received list has the species "Human".
         for character in receivedCharacters {
-            XCTAssertEqual(character.species, "Human", "El género del personaje \(character.name) es 'Human'.")
+            XCTAssertEqual(character.species, "Human", "The species of character \(character.name) should be 'Human'.")
         }
     }
 }

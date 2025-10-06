@@ -2,19 +2,19 @@ import XCTest
 import Combine
 @testable import EfcRickMorty
 
-/// `TestListViewModel` contiene pruebas unitarias para verificar
-/// el comportamiento de `ListViewModel` en diferentes escenarios:
-/// carga inicial, paginación y manejo de errores.
+/// `TestListViewModel` contains unit tests to verify
+/// the behavior of `ListViewModel` in different scenarios:
+/// initial loading, pagination, and error handling.
 final class TestListViewModel: XCTestCase {
     
     // MARK: - Helpers
     
-    /// Crea un `ListModel` simulado con los items y número de páginas indicados.
+    /// Creates a mock `ListModel` with the specified items and number of pages.
     ///
     /// - Parameters:
-    ///   - items: Lista de `ListItem` a incluir en el modelo.
-    ///   - pages: Número total de páginas disponibles.
-    /// - Returns: Un `ListModel` configurado con los datos pasados.
+    ///   - items: List of `ListItem` to include in the model.
+    ///   - pages: Total number of available pages.
+    /// - Returns: A `ListModel` configured with the provided data.
     func makeListModel(items: [ListItem], pages: Int) -> ListModel {
         let m = ListModel()
         m.data = items
@@ -24,12 +24,12 @@ final class TestListViewModel: XCTestCase {
 
     // MARK: - Tests
 
-    /// Verifica que al obtener la lista inicial (`getList`) el view model:
-    /// 1. Actualiza el estado a `.loadedView`.
-    /// 2. Establece correctamente el número de páginas para navegar.
-    /// 3. Inicializa la página actual (`numberPage`) en 1.
-    /// 4. Asigna los personajes a `characters`.
-    /// 5. Cambia `isLoading` a false.
+    /// Verifies that when fetching the initial list (`getList`) the view model:
+    /// 1. Updates the state to `.loadedView`.
+    /// 2. Correctly sets the number of pages for navigation.
+    /// 3. Initializes the current page (`numberPage`) to 1.
+    /// 4. Assigns the characters to `characters`.
+    /// 5. Changes `isLoading` to false.
     func test_getList_success_sets_state_and_pages() {
         let page1 = makeListModel(
             items: [ListItem(id: 1, name: "Rick", image: "u1")],
@@ -53,19 +53,19 @@ final class TestListViewModel: XCTestCase {
 
         let exp = expectation(description: "loaded")
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            XCTAssertEqual(vm.numberPagesForNavigate, 3, "Debe tener 3 páginas")
-            XCTAssertEqual(vm.numberPage, 1, "La página inicial debe ser 1")
-            XCTAssertEqual(vm.characters?.data.count, 1, "Debe haber un personaje cargado")
-            XCTAssertFalse(vm.isLoading, "No debe estar cargando")
+            XCTAssertEqual(vm.numberPagesForNavigate, 3, "Should have 3 pages")
+            XCTAssertEqual(vm.numberPage, 1, "The initial page must be 1")
+            XCTAssertEqual(vm.characters?.data.count, 1, "There should be one loaded character")
+            XCTAssertFalse(vm.isLoading, "Should not be loading")
             exp.fulfill()
         }
         wait(for: [exp], timeout: 1)
     }
 
-    /// Verifica que al cargar la siguiente página (`loadNextPage`):
-    /// 1. Se agregan los nuevos items al array existente (`characters.data`).
-    /// 2. Se incrementa el número de página (`numberPage`).
-    /// 3. Se llaman los métodos correspondientes del use case (`getList` y `getListByPage`).
+    /// Verifies that when loading the next page (`loadNextPage`):
+    /// 1. New items are appended to the existing array (`characters.data`).
+    /// 2. The page number is incremented (`numberPage`).
+    /// 3. The corresponding use case methods (`getList` and `getListByPage`) are called.
     func test_loadNextPage_appends_items() {
         let page1 = makeListModel(items: [ListItem(id: 1, name: "Rick", image: "u1")], pages: 2)
         let page2 = makeListModel(items: [ListItem(id: 2, name: "Morty", image: "u2")], pages: 2)
@@ -90,19 +90,19 @@ final class TestListViewModel: XCTestCase {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             vm.loadNextPage()
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                XCTAssertEqual(vm.characters?.data.map { $0.id }, [1, 2], "Debe contener los ids de ambas páginas")
-                XCTAssertEqual(vm.numberPage, 2, "El número de página debe actualizarse a 2")
-                XCTAssertTrue(calls.contains("getList"), "Debe haberse llamado getList")
-                XCTAssertTrue(calls.contains("getListByPage:2"), "Debe haberse llamado getListByPage con página 2")
+                XCTAssertEqual(vm.characters?.data.map { $0.id }, [1, 2], "Must contain the IDs from both pages")
+                XCTAssertEqual(vm.numberPage, 2, "The page number must be updated to 2")
+                XCTAssertTrue(calls.contains("getList"), "getList should have been called")
+                XCTAssertTrue(calls.contains("getListByPage:2"), "getListByPage should have been called with page 2")
                 exp.fulfill()
             }
         }
         wait(for: [exp], timeout: 1)
     }
 
-    /// Verifica que si `getList` falla con un error de red:
-    /// 1. Se asigna un `alertItem` indicando error.
-    /// 2. `isLoading` se establece en false.
+    /// Verifies that if `getList` fails with a network error:
+    /// 1. An `alertItem` indicating an error is assigned.
+    /// 2. `isLoading` is set to false.
     func test_getList_error_sets_alert_and_stops_loading() {
         let useCase = ListUseCase(
             getList: { _ in
@@ -110,8 +110,8 @@ final class TestListViewModel: XCTestCase {
                     errorType: .other,
                     genericResponse: nil,
                     responseCode: 500,
-                    errorTitle: "Error de test",
-                    errorDescription: "Simulación de error de red"
+                    errorTitle: "Test Error",
+                    errorDescription: "Simulated network error"
                 ))
                 .eraseToAnyPublisher()
             },
@@ -120,8 +120,8 @@ final class TestListViewModel: XCTestCase {
                     errorType: .other,
                     genericResponse: nil,
                     responseCode: 500,
-                    errorTitle: "Error de test",
-                    errorDescription: "Simulación de error de red"
+                    errorTitle: "Test Error",
+                    errorDescription: "Simulated network error"
                 ))
                 .eraseToAnyPublisher()
             }
@@ -132,8 +132,8 @@ final class TestListViewModel: XCTestCase {
 
         let exp = expectation(description: "error handled")
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            XCTAssertNotNil(vm.alertItem, "Debe mostrarse un alertItem al ocurrir error")
-            XCTAssertFalse(vm.isLoading, "No debe estar cargando tras el error")
+            XCTAssertNotNil(vm.alertItem, "An alertItem must be shown when an error occurs")
+            XCTAssertFalse(vm.isLoading, "Should not be loading after the error")
             exp.fulfill()
         }
         wait(for: [exp], timeout: 1)
