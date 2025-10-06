@@ -11,7 +11,8 @@ SwiftUI / Combine / MVVM / Testing
 7. [Style](#style)
 8. [Views](#views)
 9. [ViewModifier](#viewmodifier)
-10. [Testing](#testing)
+10. [ImageCache](#imagecache)
+11. [Testing](#testing)
 - [TestListFeature.swift](#testlistfeatureswift)
 - [URLProtocolStub.swift](#urlprotocolstubswift)
 - [TestListModelMapping.swift](#testlistmodelmappingswift)
@@ -420,6 +421,72 @@ struct CustomModifierCardDetailItem: ViewModifier {
     }
 }
 
+```
+
+
+## ImageCache
+---
+
+Este Actor ImageCache es un cache de imágenes en memoria, seguro para concurrencia: 
+- Descarga imágenes si no están en la caché
+- Almacena en NSCache
+- Permite eliminar imágenes individuales o todo el caché
+- Maneja límites de cantidad y tamaño para no saturar la memoria
+
+```Swift
+
+      // Actor: Garantiza operaciones sobres sus propiedades que sean seguras en concurrencia
+      actor ImageCache {
+          static let shared = ImageCache()
+
+          // Uso de NSCache para almacenar imágenes en memoria tipo NSURL
+          // NSCache tiene ventajas sobre un diccionario normal
+             // Libera memoria automáticamente si el sistema lo necesita
+             // Permite establecer límites de cantidad y tamaño
+          private let cache = NSCache<NSURL, UIImage>() 
+      
+          init() {
+              // Ajusta estos límites a tus necesidades
+              cache.countLimit = 200               // máximo número de imágenes
+              cache.totalCostLimit = 50 * 1024 * 1024 // ~50 MB
+          }
+          // Definición de un error propio
+          enum ImageError: Error {
+              case decodingFailed
+          }
+      
+          func image(for url: URL) async throws -> UIImage {
+              let key = url as NSURL
+      
+              if let cached = cache.object(forKey: key) {
+                  return cached
+              }
+      
+              let (data, _) = try await URLSession.shared.data(from: url)
+              guard let image = UIImage(data: data) else {
+                  throw ImageError.decodingFailed
+              }
+      
+              // Estimar coste para NSCache
+              let cost: Int
+              if let cg = image.cgImage {
+                  cost = cg.bytesPerRow * cg.height
+              } else {
+                  cost = data.count
+              }
+      
+              cache.setObject(image, forKey: key, cost: cost)
+              return image
+          }
+      
+          func removeImage(for url: URL) {
+              cache.removeObject(forKey: url as NSURL)
+          }
+      
+          func removeAll() {
+              cache.removeAllObjects()
+          }
+      }
 ```
 
 
