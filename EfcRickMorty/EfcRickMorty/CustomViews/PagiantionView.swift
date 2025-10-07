@@ -42,14 +42,7 @@ struct PaginationView: View {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 8) {
                         ForEach(1...totalPages, id: \.self) { numberPage in
-                            Button(action: {
-                                onPageSelected(numberPage)
-                                DispatchQueue.main.async {
-                                    withAnimation {
-                                        proxy.scrollTo(numberPage, anchor: .center)
-                                    }
-                                }
-                            }) {
+                            Button(action: {}) {
                                 Text("\(numberPage)")
                             }
                             .buttonStyle(PageButtonStyle(isSelected: currentPage == numberPage))
@@ -58,7 +51,6 @@ struct PaginationView: View {
                     }
                     .padding(.vertical, 5)
                 }
-                // Scroll automático cuando cambia la página por scroll infinito
                 .task(id: currentPage) {
                     DispatchQueue.main.async {
                         withAnimation {

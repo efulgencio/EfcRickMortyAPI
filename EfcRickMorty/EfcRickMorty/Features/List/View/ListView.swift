@@ -46,7 +46,7 @@ struct ListView: View {
                                 }
                             }
                         }
-                        .sheet(isPresented: $showDetailView) { // APLICALO AQUÍ
+                        .sheet(isPresented: $showDetailView) {
                             DetailView()
                         }
                     
@@ -94,18 +94,14 @@ extension ListView {
     }
     
     private var listado: some View {
-        // 1. Obtener los datos filtrados
         let characters = viewModel.charactersFiltered?.data ?? []
 
-        // 2. Comprobar si hay resultados
         if viewModel.searchDidNotFindResults {
-            // Mostrar "no encontrado" solo si hay un texto de búsqueda y no hay resultados
             return AnyView(
                 VStack {
-                  // Muestra el mensaje de "no encontrado"
                   ItemCharacter(item: "no encontrado")
                       .frame(height: 90)
-                  Spacer() // Para que el mensaje se quede arriba y no en el centro
+                  Spacer()
                 }
             )
         } else {
@@ -120,7 +116,6 @@ extension ListView {
                                 showDetailView = true
                             }
                             .onAppear {
-                                // Detectar último item para cargar siguiente página
                                 if result.id == characters.last?.id {
                                     viewModel.loadNextPage()
                                 }
