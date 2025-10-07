@@ -7,12 +7,6 @@
 
 import Foundation
 
-/*
-public struct DetailDTOx: Decodable {
-    let data: Character?
-    public init() { self.data = nil }
-}
-*/
 public struct DetailDTO: Codable {
     let id: Int
     let name: String

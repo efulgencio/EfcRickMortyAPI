@@ -9,19 +9,35 @@ import Foundation
 import Combine
 import OSLog
 
+/// Singleton manager responsible for executing network requests using Combine
+/// and providing structured logging of requests and responses.
+///
+/// `CombineManager` centralizes networking logic, error handling, JSON decoding,
+/// and detailed logging for debugging purposes.
 final class CombineManager {
     
+    /// Shared singleton instance of `CombineManager`.
     static let shared = CombineManager()
+    
+    /// Private initializer to enforce singleton usage.
     private init() {}
     
+    /// Flag to enable or disable detailed logging in debug mode.
     #if DEBUG
     private let isLoggingEnabled: Bool = true
     #else
     private let isLoggingEnabled: Bool = false
     #endif
 
+    /// Logger instance for structured logging.
     private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "EfcRickMorty", category: "Networking")
-
+    
+    // MARK: - Private helper methods
+    
+    /// Converts raw `Data` to a pretty-printed JSON string for logging.
+    ///
+    /// - Parameter data: Raw data received from the network.
+    /// - Returns: A formatted JSON string, or raw string if JSON formatting fails.
     private func prettyJSONString(from data: Data) -> String? {
         if let object = try? JSONSerialization.jsonObject(with: data, options: []),
            let prettyData = try? JSONSerialization.data(withJSONObject: object, options: [.prettyPrinted]),
@@ -31,18 +47,31 @@ final class CombineManager {
         return String(data: data, encoding: .utf8)
     }
 
+    /// Trims a string to a given character limit for logging purposes.
+    ///
+    /// - Parameters:
+    ///   - string: The string to trim.
+    ///   - limit: Maximum number of characters (default 4000).
+    /// - Returns: The trimmed string with a truncation indicator if necessary.
     private func trimmed(_ string: String, limit: Int = 4000) -> String {
         guard string.count > limit else { return string }
         let end = string.index(string.startIndex, offsetBy: limit)
         return String(string[..<end]) + "… [truncated]"
     }
-
+    
+    // MARK: - Public methods
+    
+    /// Executes a network request for a given endpoint and decodes the response into the specified type.
+    ///
+    /// - Parameters:
+    ///   - endpoint: The endpoint conforming to `EndPointProtocol`.
+    ///   - type: The type to decode the response into (must conform to `Decodable`).
+    /// - Returns: A publisher emitting the decoded object or a `NetworkError`.
     func getData<T: Decodable>(endpoint: EndPointProtocol, type: T.Type) -> AnyPublisher<T, NetworkError> {
 
         let request = NSMutableURLRequest(url: NSURL(string: endpoint.urlString)! as URL,
                                           cachePolicy: .useProtocolCachePolicy,
-                                      timeoutInterval: 10.0)
-        
+                                          timeoutInterval: 10.0)
         request.httpMethod = endpoint.method
         request.allHTTPHeaderFields = endpoint.headers
         
@@ -58,7 +87,7 @@ final class CombineManager {
             }
         }
         
-        return  URLSession.shared.dataTaskPublisher(for: request as URLRequest)
+        return URLSession.shared.dataTaskPublisher(for: request as URLRequest)
             .handleEvents(
                 receiveOutput: { [weak self] data, response in
                     guard let self = self, self.isLoggingEnabled else { return }
@@ -97,9 +126,11 @@ final class CombineManager {
             }
             .eraseToAnyPublisher()
     }
-
 }
 
+// MARK: - Network Error Types
+
+/// Network errors specific to CombineManager requests.
 enum NetworkErrorCombine: Error {
     case invalidURL
     case responseError
@@ -118,4 +149,3 @@ extension NetworkErrorCombine: LocalizedError {
         }
     }
 }
-

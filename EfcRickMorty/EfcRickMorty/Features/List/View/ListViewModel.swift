@@ -8,34 +8,72 @@
 import Foundation
 import Combine
 
+/// ViewModel responsible for managing the state and business logic
+/// of the character list view in the Rick & Morty app.
+///
+/// `ListViewModel` handles fetching characters, searching, pagination,
+/// and exposes published properties to update the SwiftUI views reactively.
 final class ListViewModel: ObservableObject {
     
+    // MARK: - Published properties
+    
+    /// Represents the current state of the view.
     @Published var viewModelState: ViewModelState = .loadingView
+    
+    /// An optional alert item to show error messages in the UI.
     @Published var alertItem: AlertItem?
+    
+    /// Current search text input by the user.
     @Published var searchText: String = ""
+    
+    /// Flag to indicate if the search text should be cleared.
     @Published var clearSearchText: Bool = false
+    
+    /// Search text after debounce, used internally for optimized searching.
     @Published var debouncedSearchText: String = ""
     
+    /// The list use case providing fetching logic.
     private var listUseCase: ListUseCase
+    
+    /// The current Combine task for network requests.
     private var task: Cancellable?
+    
+    /// Set of cancellables to store Combine subscriptions.
     private var cancellables = Set<AnyCancellable>()
     
+    /// The full list of characters fetched from the API.
     @Published var characters: ListModel? = nil
+    
+    /// The filtered list of characters based on search text.
     @Published var charactersFiltered: ListModel? = nil
+    
+    /// Current page number for pagination.
     @Published var numberPage: Int = 0
+    
+    /// Total number of pages available for navigation.
     @Published var numberPagesForNavigate: Int = 0
+    
+    /// Flag indicating if data is currently loading.
     @Published var isLoading: Bool = false
-    // Nuevo estado para indicar que la búsqueda no devolvió resultados
+    
+    /// Flag indicating if the search returned no results.
     @Published var searchDidNotFindResults: Bool = false
     
+    // MARK: - Initialization
+    
+    /// Initializes the `ListViewModel` with an optional `ListUseCase`.
+    ///
+    /// - Parameter listUseCase: The use case to fetch list data (default is `.live`).
     init(listUseCase: ListUseCase = .live) {
         self.listUseCase = listUseCase
         addSubscriberForComponents()
         getList()
     }
     
+    // MARK: - Private methods
+    
+    /// Sets up Combine subscribers for search text and clear search events.
     private func addSubscriberForComponents() {
-        // Combina clearSearchText y searchText con debounce
         Publishers.CombineLatest($searchText, $clearSearchText)
             .removeDuplicates { lhs, rhs in
                 lhs.0 == rhs.0 && lhs.1 == rhs.1
@@ -45,23 +83,24 @@ final class ListViewModel: ObservableObject {
                 guard let self = self else { return }
 
                 if clearSearch {
-                    self.clearSearchText = false // resetear flag
+                    self.clearSearchText = false
                     self.getList()
                 } else {
-                    // Solo realizar búsqueda si tiene 3 o más caracteres
                     if text.count >= 3 {
                         self.performSearch(with: text)
                     } else if text.isEmpty {
-                        self.getList() // si borra todo, recarga lista completa
+                        self.getList()
                     } else {
-                        // opcional: limpiar resultados si < 3 caracteres
                         self.charactersFiltered = self.characters
                     }
                 }
             }
             .store(in: &cancellables)
     }
-
+    
+    /// Performs a search request based on the given text.
+    ///
+    /// - Parameter text: The search query string.
     private func performSearch(with text: String) {
         if text.isEmpty {
             getList()
@@ -75,32 +114,14 @@ final class ListViewModel: ObservableObject {
                         self?.isLoading = false
                         
                         if case let .failure(error) = completion {
-                            // *** NUEVA LÓGICA CLAVE: Manejar el fallo de la API AQUÍ ***
-                            
-                            // NOTA: Si la API de Rick & Morty devuelve un error 404 (NetworkError)
-                            // cuando no hay resultados de búsqueda, usamos eso como señal.
-                            // Si tu `listUseCase` mapea el error 404 de "Not Found" a un error específico,
-                            // deberías usarlo aquí. Por ahora, asumiremos que si hay un error
-                            // Y estamos en una búsqueda activa, es "no encontrado".
-                            
-                            // Opción 1: Si quieres manejar el fallo de "No encontrado" como un caso de error específico
-                            // if error is NetworkError.notFound { ... }
-                            
-                            // Opción 2 (Simple y funcional en este contexto): Si ocurre un fallo,
-                            // asumimos que es "no encontrado" y limpiamos la lista
-                            
-                            self?.charactersFiltered = ListModel() // Limpiamos la lista
+                            self?.charactersFiltered = ListModel()
                             self?.searchDidNotFindResults = true
-                            self?.viewModelState = .filteredView // MANTENER ESTADO VISIBLE
-                            
-                            // IMPORTANTE: NO LLAMAMOS a self?.handleCompletion(completion: completion)
-                            // para evitar que se muestre el error genérico .errorView.
+                            self?.viewModelState = .filteredView
                         }
                     }
                 },
                 receiveValue: { [weak self] response in
                     DispatchQueue.main.async {
-                        // *** LÓGICA DE VALOR: Comprobar si se obtuvieron resultados. ***
                         if response.data.isEmpty {
                             self?.charactersFiltered = ListModel()
                             self?.searchDidNotFindResults = true
@@ -117,7 +138,7 @@ final class ListViewModel: ObservableObject {
         }
     }
     
-    // Carga inicial o búsqueda
+    /// Fetches the full list of characters from the API.
     func getList() {
         self.numberPage = 0
         self.isLoading = true
@@ -139,7 +160,9 @@ final class ListViewModel: ObservableObject {
         )
     }
     
-    // Carga de página específica
+    /// Fetches characters for a specific page.
+    ///
+    /// - Parameter page: The page number as a string.
     func getListByPage(page: String) {
         guard let pageInt = Int(page) else { return }
         self.numberPage = pageInt
@@ -152,10 +175,10 @@ final class ListViewModel: ObservableObject {
             receiveValue: { [weak self] response in
                 DispatchQueue.main.async {
                     if pageInt == 1 {
-                        // Reemplaza lista
+                        // Replace the list for the first page
                         self?.characters = response
                     } else {
-                        // Añadir al listado existente
+                        // Append new data for subsequent pages
                         self?.characters?.data.append(contentsOf: response.data)
                     }
                     self?.charactersFiltered = self?.characters
@@ -166,15 +189,18 @@ final class ListViewModel: ObservableObject {
         )
     }
     
-    // Carga siguiente página automática
+    /// Loads the next page of characters if available.
     func loadNextPage() {
         guard !isLoading,
-              searchText.isEmpty, // <-- AÑADIDO: Solo pagina si no hay búsqueda
+              searchText.isEmpty,
               numberPage < numberPagesForNavigate else { return }
         let nextPage = numberPage + 1
         getListByPage(page: "\(nextPage)")
     }
     
+    /// Handles completion of Combine publishers and updates the state in case of errors.
+    ///
+    /// - Parameter completion: The completion event from a Combine publisher.
     private func handleCompletion(completion: Subscribers.Completion<NetworkError>) {
         switch completion {
         case .finished:
