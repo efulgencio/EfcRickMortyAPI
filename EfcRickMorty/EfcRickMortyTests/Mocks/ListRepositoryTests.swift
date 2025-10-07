@@ -9,62 +9,80 @@ import XCTest
 import Combine
 @testable import EfcRickMorty
 
-final class ListRepositoryTests: XCTestCase {
 
-    // Stores the Combine subscriptions so they are not prematurely deallocated.
+/// `ListRepositoryTests` contains unit tests for verifying the behavior of the
+/// `ListRepository` when retrieving a list of characters.
+///
+/// These tests ensure that the mock repository correctly loads data and that
+/// the received characters have the expected properties (in this case, species and gender).
+///
+/// The tests use Combine to handle asynchronous data streams and `XCTestExpectation`
+/// to wait for data emission before performing assertions.
+final class ListRepositoryTests: XCTestCase {
+    
+    // MARK: - Properties
+    
+    /// A set of Combine subscriptions used to store publishers during testing.
     var cancellables: Set<AnyCancellable>!
 
+    // MARK: - Lifecycle
+    
+    /// Sets up the test environment before each test.
+    /// Initializes the Combine cancellables set.
     override func setUp() {
         super.setUp()
-        // We initialize the set of cancellables before each test.
         cancellables = []
     }
 
+    /// Cleans up the test environment after each test.
+    /// Releases Combine subscriptions and calls the superclass tearDown.
     override func tearDown() {
-        // We clear the set after each test.
         cancellables = nil
         super.tearDown()
     }
 
+    // MARK: - Tests
+    
+    /// Verifies that when retrieving a character list from the mock repository,
+    /// all received characters have the expected species and gender.
+    ///
+    /// The test:
+    /// - Calls `getList(_:)` with an empty filter.
+    /// - Waits for the mock repository to emit a list of characters.
+    /// - Asserts that the list is not empty.
+    /// - Validates that each character’s `species` equals `"Human"`.
+    ///
+    /// If no data is received or a character has an unexpected value, the test fails.
     func test_getListMock_whenDataIsLoaded_thenCharactersGenderShouldBeMale() {
-        // 1. ARRANGE
-        
-        // We create an expectation to handle the asynchronous call of the publisher.
+        // 1. Create an expectation for the asynchronous call
         let expectation = XCTestExpectation(description: "Receive characters from the mock and verify the gender.")
         
-        // We use the mock you already have defined. This is our "System Under Test" (SUT).
+        // 2. Create the mock repository instance
         let repositoryMock = ListRepository.mock
         
+        // 3. Prepare a variable to store received data
         var receivedCharacters: [Character] = []
 
-        // 2. ACT
-        
-        // We subscribe to the publisher returned by the getList function.
-        // The `forFilter` parameter can be any string, as the mock does not use it.
+        // 4. Perform the call and subscribe to the publisher
         repositoryMock.getList("")
             .sink(receiveCompletion: { completion in
-                // If the subscription fails, the test must fail.
+                // Fail the test if an error occurs
                 if case .failure(let error) = completion {
                     XCTFail("Fetching data from the mock failed with error: \(error)")
                 }
             }, receiveValue: { listDTO in
-                // We save the received characters.
+                // Store received characters and fulfill the expectation
                 receivedCharacters = listDTO.results
-                
-                // The test has received the data, so we fulfill the expectation.
                 expectation.fulfill()
             })
-            .store(in: &cancellables) // We store the subscription.
+            .store(in: &cancellables)
 
-        // We wait for the expectation to be fulfilled, with a timeout in case something goes wrong.
+        // 5. Wait for the asynchronous operation to complete
         wait(for: [expectation], timeout: 1.0)
         
-        // 3. ASSERT
-        
-        // We make sure that we have received characters.
+        // 6. Assertions
         XCTAssertFalse(receivedCharacters.isEmpty, "No characters were received from the mock.")
         
-        // We verify that EVERY character in the received list has the species "Human".
         for character in receivedCharacters {
             XCTAssertEqual(character.species, "Human", "The species of character \(character.name) should be 'Human'.")
         }
