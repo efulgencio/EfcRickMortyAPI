@@ -64,7 +64,7 @@ extension DetailView {
     private var headerOptions: some View {
         HStack {
             VStack {
-                Text("Character")
+                Text("character".localized)
                     .modifier(CustomModifierCardDetailItem(heightContent: CGFloat(40)))
                 Divider()
                    .frame(height: 6)
@@ -73,7 +73,7 @@ extension DetailView {
                 optionShow = OptionSelected.character
             }
             VStack {
-                Text("Location")
+                Text("location".localized)
                     .modifier(CustomModifierCardDetailItem(heightContent: CGFloat(40)))
                 Divider()
                    .frame(height: 6)
@@ -105,7 +105,7 @@ extension DetailView {
     
     private var header: some View {
         HStack {
-            Text(NSLocalizedString("rick_morty", comment: ""))
+            Text("rick_morty".localized)
                 .font(.headline)
                 .fontWeight(.heavy)
                 .foregroundColor(.white)

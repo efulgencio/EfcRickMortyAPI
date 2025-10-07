@@ -11,6 +11,15 @@
 // Common
 "rick_morty"="Rick and Morty";
 "number_registers"="(EN) Registros cargados:";
+"characters"="Characters";
+"location"="Location";
+
+
+// Detail view
+"man"="Man";
+"woman"="Woman";
+"alive"="Alive";
+"dead"="Dead";
 
 
 // SearchBarView

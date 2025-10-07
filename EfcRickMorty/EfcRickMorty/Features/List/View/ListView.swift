@@ -41,18 +41,15 @@ struct ListView: View {
                     
                     case .loadedView, .filteredView:
                         header
-                        registrosCargados
+                        loadedRegisters
                         
-                        HStack {
-                            SearchBarView(searchText: $viewModel.searchText, clearSearch: $viewModel.clearSearchText)
-                            buttonAction
-                        }
-                        .padding(.horizontal, 10)
-                        .background(Color.yellow)
+                        SearchBarView(searchText: $viewModel.searchText, clearSearch: $viewModel.clearSearchText)
+                            .padding(.horizontal, 10)
+                            .background(Color.yellow)
                         
                         ScrollView {
                             LazyVStack(spacing: 0) {
-                                listado
+                                listCharacter
                                 // Loading indicator shown when fetching more data
                                 if viewModel.isLoading {
                                     ProgressView()
@@ -72,7 +69,7 @@ struct ListView: View {
                         .frame(height: 60)
                 }
             }
-            .navigationTitle("Characters")
+            .navigationTitle("characters".localized)
             .environmentObject(characterData)
             .navigationBarTitleDisplayMode(.inline)
             .onAppear {
@@ -87,7 +84,7 @@ extension ListView {
     /// Header section showing the localized title of the list.
     private var header: some View {
         HStack {
-            Text(NSLocalizedString("rick_morty", comment: ""))
+            Text("rick_morty".localized)
                 .font(.headline)
                 .fontWeight(.heavy)
         }
@@ -106,13 +103,13 @@ extension ListView {
     }
     
     /// Displays the total number of characters loaded.
-    private var registrosCargados: some View {
-        Text("\(NSLocalizedString("number_registers", comment: "")) \(viewModel.characters?.data.count ?? 0)")
+    private var loadedRegisters: some View {
+        Text("\("number_registers".localized) \(viewModel.characters?.data.count ?? 0)")
             .infoBadgeStyle()
     }
     
     /// Displays the list of characters or a message if no results were found.
-    private var listado: some View {
+    private var listCharacter: some View {
         let characters = viewModel.charactersFiltered?.data ?? []
 
         if viewModel.searchDidNotFindResults {

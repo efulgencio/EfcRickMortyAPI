@@ -14,8 +14,8 @@ enum GenderCharacter {
     
     var iconDescription: String? {
         switch self {
-        case .female: return "Mujer 👩‍⚖️"
-        case .male: return "Hombre 🤵‍♂️"
+        case .female: return "woman".localized + " 👩‍⚖️"
+        case .male: return "man".localized + " 🤵‍♂️"
         case .unknown: return "?"
         }
     }

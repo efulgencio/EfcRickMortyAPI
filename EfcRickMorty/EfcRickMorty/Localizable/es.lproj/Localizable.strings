@@ -9,7 +9,14 @@
 // Common
 "rick_morty"="Rick y Morty";
 "number_registers"="Registros cargados:";
+"characters"="Personajes";
+"location"="Localización";
 
+// Detail view
+"man"="Hombre";
+"woman"="Mujer";
+"alive"="Vivo";
+"dead"="Muerto";
 
 // SearchBarView
 "search_placeholder"="Introducir nombre para filtar ...";

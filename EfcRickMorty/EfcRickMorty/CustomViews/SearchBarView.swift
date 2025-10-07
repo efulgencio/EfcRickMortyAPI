@@ -20,7 +20,7 @@ struct SearchBarView: View {
                     Color.secondary : Color.accentColor
                 )
             
-            TextField(NSLocalizedString("search_placeholder", comment: ""), text: $searchText)
+            TextField("search_placeholder".localized, text: $searchText)
                 .font(.system(size: 16))
                 .foregroundColor(Color.accentColor)
                 .disableAutocorrection(true)

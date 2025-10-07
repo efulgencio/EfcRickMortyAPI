@@ -21,6 +21,7 @@
 		83396A532BD54FDB000E9E39 /* GenderCharacter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83396A522BD54FDB000E9E39 /* GenderCharacter.swift */; };
 		83396A572BD55073000E9E39 /* OptionSelected.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83396A562BD55073000E9E39 /* OptionSelected.swift */; };
 		834E39142BD3DCA400AF907F /* ItemCharacter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 834E39132BD3DCA400AF907F /* ItemCharacter.swift */; };
+		835013312E94E28700ED258A /* StringExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 835013302E94E28100ED258A /* StringExt.swift */; };
 		83596CF72BCEE26E008EE8AD /* EfcRickMortyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83596CF62BCEE26E008EE8AD /* EfcRickMortyApp.swift */; };
 		83596CFB2BCEE271008EE8AD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 83596CFA2BCEE271008EE8AD /* Assets.xcassets */; };
 		83596CFE2BCEE271008EE8AD /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 83596CFD2BCEE271008EE8AD /* Preview Assets.xcassets */; };
@@ -102,6 +103,7 @@
 		83396A522BD54FDB000E9E39 /* GenderCharacter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenderCharacter.swift; sourceTree = "<group>"; };
 		83396A562BD55073000E9E39 /* OptionSelected.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionSelected.swift; sourceTree = "<group>"; };
 		834E39132BD3DCA400AF907F /* ItemCharacter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemCharacter.swift; sourceTree = "<group>"; };
+		835013302E94E28100ED258A /* StringExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExt.swift; sourceTree = "<group>"; };
 		83596CF32BCEE26E008EE8AD /* EfcRickMorty.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EfcRickMorty.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		83596CF62BCEE26E008EE8AD /* EfcRickMortyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EfcRickMortyApp.swift; sourceTree = "<group>"; };
 		83596CFA2BCEE271008EE8AD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -371,6 +373,7 @@
 		83596D182BCEE491008EE8AD /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				835013302E94E28100ED258A /* StringExt.swift */,
 				83596D692BCEEFF6008EE8AD /* View */,
 				83596D6C2BCEF066008EE8AD /* Colors */,
 			);
@@ -668,6 +671,7 @@
 				83596D372BCEEE1C008EE8AD /* DetailRepository.swift in Sources */,
 				83596D272BCEEDC4008EE8AD /* ListMapper.swift in Sources */,
 				83396A572BD55073000E9E39 /* OptionSelected.swift in Sources */,
+				835013312E94E28700ED258A /* StringExt.swift in Sources */,
 				83596D652BCEEF5F008EE8AD /* Alert.swift in Sources */,
 				83596D5D2BCEEED0008EE8AD /* Color.swift in Sources */,
 				83FD429D2BD30636007B57A6 /* jsonListDTO.swift in Sources */,
