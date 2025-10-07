@@ -12,6 +12,7 @@
 "rick_morty"="Rick and Morty";
 "number_registers"="(EN) Registros cargados:";
 "characters"="Characters";
+"character"="Character";
 "location"="Location";
 "not_found"="Not found";
 "not_found_registers"="(EN) No se encontraron registros";
@@ -22,7 +23,8 @@
 "woman"="Woman";
 "alive"="Alive";
 "dead"="Dead";
-
+"status"="Status";
+"sex"="Sex";
 
 // SearchBarView
 "search_placeholder"="(EN) Introducir nombre para filtar ...";

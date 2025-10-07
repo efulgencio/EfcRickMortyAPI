@@ -30,8 +30,8 @@ struct CardDetail: View {
    
             Spacer()
             
-            TextValueRow(textItem: "Status", valueItem: detailItem!.status.iconDescription!)
-            TextValueRow(textItem: "Sexo", valueItem: detailItem!.gender.iconDescription!)
+            TextValueRow(textItem: "status".localized, valueItem: detailItem!.status.iconDescription!)
+            TextValueRow(textItem: "sex".localized, valueItem: detailItem!.gender.iconDescription!)
         }
         .frame(height: 200)
         .padding()

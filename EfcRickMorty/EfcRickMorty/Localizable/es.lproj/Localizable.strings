@@ -10,6 +10,7 @@
 "rick_morty"="Rick y Morty";
 "number_registers"="Registros cargados:";
 "characters"="Personajes";
+"character"="Personaje";
 "location"="Localización";
 "not_found"="No encontrado.";
 "not_found_registers"="No se encontraron registros";
@@ -19,6 +20,8 @@
 "woman"="Mujer";
 "alive"="Vivo";
 "dead"="Muerto";
+"status"="Estatus";
+"sex"="Sexo";
 
 // SearchBarView
 "search_placeholder"="Introducir nombre para filtar ...";
