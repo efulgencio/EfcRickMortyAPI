@@ -11,6 +11,8 @@
 "number_registers"="Registros cargados:";
 "characters"="Personajes";
 "location"="Localización";
+"not_found"="No encontrado.";
+"not_found_registers"="No se encontraron registros";
 
 // Detail view
 "man"="Hombre";

@@ -112,11 +112,11 @@ extension ListView {
     private var listCharacter: some View {
         let characters = viewModel.charactersFiltered?.data ?? []
 
-        if viewModel.searchDidNotFindResults {
+        if characters.isEmpty && !viewModel.searchText.isEmpty  {
             return AnyView(
                 VStack {
                     // Translated: “Not found”
-                    ItemCharacter(item: "not found")
+                    ItemCharacter(item: "not_found".localized)
                         .frame(height: 90)
                     Spacer()
                 }

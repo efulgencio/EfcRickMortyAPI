@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ItemCharacter: View {
     
-    let item: Any // ListItem
+    let item: Any 
     
     var body: some View {
         if let model = item as? ListItem {
@@ -38,14 +38,12 @@ struct ItemCharacter: View {
                 .clipShape(RoundedCorner(radius: 30, corners: [.bottomLeft, .topRight]))
             
             }.padding(20)
-         } else if let message = item as? String, message == "no encontrado" {
-            // Vista especial para "no encontrado"
-            Text("No se encontraron registros 🧐")
+        } else if let message = item as? String, message == "not_found".localized {
+             Text("not_found_registers".localized + " 🧐")
                 .foregroundColor(.red)
                 .font(.title3)
                 .frame(maxWidth: .infinity, alignment: .center)
         } else {
-            // Fallback si no es un modelo o el mensaje especial
             EmptyView()
         }
     }

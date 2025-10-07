@@ -13,6 +13,8 @@
 "number_registers"="(EN) Registros cargados:";
 "characters"="Characters";
 "location"="Location";
+"not_found"="Not found";
+"not_found_registers"="(EN) No se encontraron registros";
 
 
 // Detail view
