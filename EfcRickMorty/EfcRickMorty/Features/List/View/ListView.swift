@@ -61,12 +61,13 @@ struct ListView: View {
                             DetailView()
                         }
                     
-                        // Pagination control at the bottom of the list
-                        PaginationView(currentPage: $viewModel.numberPage, totalPages: viewModel.numberPagesForNavigate) { selectedPage in
-                            viewModel.searchText = ""
-                            viewModel.getListByPage(page: "\(selectedPage)")
+                        if !(viewModel.charactersFiltered?.data.isEmpty ?? true){
+                            PaginationView(currentPage: $viewModel.numberPage, totalPages: viewModel.numberPagesForNavigate) { selectedPage in
+                                viewModel.searchText = ""
+                                viewModel.getListByPage(page: "\(selectedPage)")
+                            }
+                            .frame(height: 60)
                         }
-                        .frame(height: 60)
                 }
             }
             .navigationTitle("characters".localized)
